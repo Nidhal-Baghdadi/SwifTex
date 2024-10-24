@@ -23,6 +23,7 @@ E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx
 \\]
 where \\( f(x) \\) is the probability density function of \\(X\\).`);
 
+  /*
   const config = {
     loader: { load: ['[tex]/html'] },
     tex: {
@@ -36,7 +37,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
         ['\\[', '\\]'],
       ],
     },
-  };
+  };*/
   const downloadPDF = () => {
     alert('PDF downloaded');
   };
@@ -74,7 +75,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       </div>
       <div className='grow'>
         <RenderLayout>
-          <MathJaxContext version={3} config={config}>
+          <MathJaxContext>
             <MathJax>{latex}</MathJax>
           </MathJaxContext>
 

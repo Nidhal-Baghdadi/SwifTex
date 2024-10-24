@@ -28,4 +28,5 @@ export default defineConfig({
     viteReactPlugin(),
     process.env.INLINE ? viteSingleFile() : null,
   ].filter(Boolean),
+  base: '/vite-deploy/',
 });

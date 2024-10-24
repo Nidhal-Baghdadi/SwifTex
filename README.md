@@ -4,7 +4,7 @@ MathJax wrapper with react.
 
 ## Live Demo
 
-The [SwifTex](https://some-url.com/) website to format MathJax output in real time.
+The [SwifTex](https://swif-tex.vercel.app/) website to format MathJax output in real time.
 
 
 

@@ -8,6 +8,7 @@ export default defineConfig({
     outDir: 'dist', // Customize output directory
     reportCompressedSize: false, // Disable reporting of compressed sizes
     sourcemap: false, // Disable sourcemaps for production (optional)
+    minify: false,
     rollupOptions: {
       output: {
         entryFileNames: 'assets/[name].[hash].js', // Cache busting with hashes

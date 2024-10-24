@@ -247,7 +247,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grow", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(RenderLayout, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: latex }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: latex }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {

@@ -76,7 +76,9 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       <div className='grow'>
         <RenderLayout>
           <MathJaxContext>
-            <MathJax>{latex}</MathJax>
+            <MathJax>
+              <span>{latex}</span>
+            </MathJax>
           </MathJaxContext>
 
           <button

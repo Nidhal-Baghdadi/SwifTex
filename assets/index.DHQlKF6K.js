@@ -218,6 +218,24 @@ For continuous random variables, the expected value is given by:
 E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx
 \\]
 where \\( f(x) \\) is the probability density function of \\(X\\).`);
+  const config = {
+    loader: { load: ["[tex]/html"] },
+    tex: {
+      packages: { "[+]": ["html"] },
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"]
+      ],
+      displayMath: [
+        ["$$", "$$"],
+        ["\\[", "\\]"]
+      ]
+    }
+  };
+  const latexRef = reactExports.useRef(latex);
+  reactExports.useEffect(() => {
+    latexRef.current = latex;
+  }, [latex]);
   const downloadPDF = () => {
     alert("PDF downloaded");
   };
@@ -247,7 +265,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grow", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(RenderLayout, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: latex }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { version: 3, config, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: latexRef.current }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {

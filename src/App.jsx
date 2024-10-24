@@ -1,7 +1,7 @@
 import RecommendationAccordion from '@components/RecommendationAccordion';
 import { Editor } from '@monaco-editor/react';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import EditorLayout from './layout/EditorLayout';
 import RenderLayout from './layout/RenderLayout';
@@ -23,7 +23,6 @@ E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx
 \\]
 where \\( f(x) \\) is the probability density function of \\(X\\).`);
 
-  /*
   const config = {
     loader: { load: ['[tex]/html'] },
     tex: {
@@ -37,7 +36,14 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
         ['\\[', '\\]'],
       ],
     },
-  };*/
+  };
+
+  const latexRef = useRef(latex);
+
+  useEffect(() => {
+    latexRef.current = latex;
+  }, [latex]);
+
   const downloadPDF = () => {
     alert('PDF downloaded');
   };
@@ -75,9 +81,9 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       </div>
       <div className='grow'>
         <RenderLayout>
-          <MathJaxContext>
+          <MathJaxContext version={3} config={config}>
             <MathJax>
-              <span>{latex}</span>
+              <span>{latexRef.current}</span>
             </MathJax>
           </MathJaxContext>
 

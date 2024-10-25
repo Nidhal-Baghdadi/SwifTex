@@ -1,7 +1,7 @@
 import RecommendationAccordion from '@components/RecommendationAccordion';
 import { Editor } from '@monaco-editor/react';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import EditorLayout from './layout/EditorLayout';
 import RenderLayout from './layout/RenderLayout';
@@ -37,8 +37,6 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ],
     },
   };
-
-  const latexRef = useRef(latex);
 
   const downloadPDF = () => {
     alert('PDF downloaded');

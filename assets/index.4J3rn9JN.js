@@ -232,7 +232,6 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ]
     }
   };
-  reactExports.useRef(latex);
   const downloadPDF = () => {
     alert("PDF downloaded");
   };

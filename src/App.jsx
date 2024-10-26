@@ -38,13 +38,19 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ],
     },
   };
+
   useEffect(() => {
-    // forcing MathJax re-render for production environment
     if (isFirstRun.current) {
-      isFirstRun.current = false; // Set to false after first render
+      isFirstRun.current = false;
       return;
     }
-    window.MathJax?.typesetPromise();
+
+    // Check that MathJax has loaded before calling typesetPromise
+    if (window.MathJax?.startup?.promise) {
+      window.MathJax.startup.promise.then(() => {
+        window.MathJax.typesetPromise();
+      });
+    }
   }, [latex]);
 
   const downloadPDF = () => {

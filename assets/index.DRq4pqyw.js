@@ -232,6 +232,9 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ]
     }
   };
+  reactExports.useEffect(() => {
+    window.MathJax.typesetPromise();
+  }, [latex]);
   const downloadPDF = () => {
     alert("PDF downloaded");
   };
@@ -261,7 +264,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grow", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(RenderLayout, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { version: 3, config, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: latex }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MathJaxContext, { version: 3, config, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MathJax, { children: latex }, latex) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {

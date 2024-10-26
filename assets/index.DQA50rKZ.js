@@ -218,6 +218,7 @@ For continuous random variables, the expected value is given by:
 E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx
 \\]
 where \\( f(x) \\) is the probability density function of \\(X\\).`);
+  const isFirstRun = reactExports.useRef(true);
   const config = {
     loader: { load: ["[tex]/html"] },
     tex: {
@@ -233,7 +234,12 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
     }
   };
   reactExports.useEffect(() => {
-    window.MathJax.typesetPromise();
+    var _a;
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    (_a = window.MathJax) == null ? void 0 : _a.typesetPromise();
   }, [latex]);
   const downloadPDF = () => {
     alert("PDF downloaded");

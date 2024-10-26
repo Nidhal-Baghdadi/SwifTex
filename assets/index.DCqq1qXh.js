@@ -234,12 +234,16 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
     }
   };
   reactExports.useEffect(() => {
-    var _a;
+    var _a, _b;
     if (isFirstRun.current) {
       isFirstRun.current = false;
       return;
     }
-    (_a = window.MathJax) == null ? void 0 : _a.typesetPromise();
+    if ((_b = (_a = window.MathJax) == null ? void 0 : _a.startup) == null ? void 0 : _b.promise) {
+      window.MathJax.startup.promise.then(() => {
+        window.MathJax.typesetPromise();
+      });
+    }
   }, [latex]);
   const downloadPDF = () => {
     alert("PDF downloaded");

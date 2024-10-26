@@ -1,7 +1,7 @@
 import RecommendationAccordion from '@components/RecommendationAccordion';
 import { Editor } from '@monaco-editor/react';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import EditorLayout from './layout/EditorLayout';
 import RenderLayout from './layout/RenderLayout';
@@ -37,6 +37,10 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       ],
     },
   };
+  useEffect(() => {
+    // forcing MathJax re-render for production environment
+    window.MathJax.typesetPromise();
+  }, [latex]);
 
   const downloadPDF = () => {
     alert('PDF downloaded');
@@ -76,7 +80,7 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
       <div className='grow'>
         <RenderLayout>
           <MathJaxContext version={3} config={config}>
-            <MathJax>{latex}</MathJax>
+            <MathJax key={latex}>{latex}</MathJax>
           </MathJaxContext>
 
           <button

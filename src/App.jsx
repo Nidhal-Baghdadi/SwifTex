@@ -1,7 +1,7 @@
 import RecommendationAccordion from '@components/RecommendationAccordion';
 import { Editor } from '@monaco-editor/react';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import EditorLayout from './layout/EditorLayout';
 import RenderLayout from './layout/RenderLayout';
@@ -22,6 +22,7 @@ For continuous random variables, the expected value is given by:
 E[X] = \\int_{-\\infty}^{\\infty} x f(x) \\, dx
 \\]
 where \\( f(x) \\) is the probability density function of \\(X\\).`);
+  const isFirstRun = useRef(true);
 
   const config = {
     loader: { load: ['[tex]/html'] },
@@ -39,7 +40,11 @@ where \\( f(x) \\) is the probability density function of \\(X\\).`);
   };
   useEffect(() => {
     // forcing MathJax re-render for production environment
-    window.MathJax.typesetPromise();
+    if (isFirstRun.current) {
+      isFirstRun.current = false; // Set to false after first render
+      return;
+    }
+    window.MathJax?.typesetPromise();
   }, [latex]);
 
   const downloadPDF = () => {

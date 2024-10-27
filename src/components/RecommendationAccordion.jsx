@@ -8,9 +8,9 @@ export default function RecommendationAccordion({ onData }) {
   };
 
   return (
-    <Accordion alwaysOpen>
+    <Accordion alwaysOpen className='border-2'>
       <Accordion.Panel>
-        <Accordion.Title className='border-0 bg-transparent text-black hover:bg-transparent focus:ring-0'>
+        <Accordion.Title className='bg-transparent text-black hover:bg-transparent focus:ring-0'>
           Samples
         </Accordion.Title>
         <Accordion.Content className='overflow-auto hover:resize-y'>

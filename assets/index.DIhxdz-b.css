@@ -1207,11 +1207,11 @@ input[type="range"]::-ms-fill-lower {
 .bottom-16 {
   bottom: 4rem;
 }
-.bottom-3 {
-  bottom: 0.75rem;
-}
 .bottom-5 {
   bottom: 1.25rem;
+}
+.bottom-9 {
+  bottom: 2.25rem;
 }
 .end-2 {
   inset-inline-end: 0.5rem;
@@ -1249,8 +1249,8 @@ input[type="range"]::-ms-fill-lower {
 .right-0 {
   right: 0px;
 }
-.right-3 {
-  right: 0.75rem;
+.right-4 {
+  right: 1rem;
 }
 .top-0 {
   top: 0px;
@@ -1484,9 +1484,6 @@ input[type="range"]::-ms-fill-lower {
 .h-96 {
   height: 24rem;
 }
-.h-\[35px\] {
-  height: 35px;
-}
 .h-auto {
   height: auto;
 }
@@ -1567,9 +1564,6 @@ input[type="range"]::-ms-fill-lower {
 }
 .w-9 {
   width: 2.25rem;
-}
-.w-\[35px\] {
-  width: 35px;
 }
 .w-auto {
   width: auto;

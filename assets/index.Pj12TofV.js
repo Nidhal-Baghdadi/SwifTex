@@ -1,5 +1,43 @@
+import { j as jsxRuntimeExports, B as Button, r as reactExports, A as Accordion, m as motion, L as Le, d as de, F as FaRegFilePdf, u as unified, a as remarkParse, b as remarkMath, c as remarkRehype, e as rehypeKatex, f as rehypeStringify, h as html2pdf, g as createRoot } from "./vendor.B1XonYE9.js";
+(function polyfill() {
+  const relList = document.createElement("link").relList;
+  if (relList && relList.supports && relList.supports("modulepreload")) {
+    return;
+  }
+  for (const link of document.querySelectorAll('link[rel="modulepreload"]')) {
+    processPreload(link);
+  }
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type !== "childList") {
+        continue;
+      }
+      for (const node of mutation.addedNodes) {
+        if (node.tagName === "LINK" && node.rel === "modulepreload")
+          processPreload(node);
+      }
+    }
+  }).observe(document, { childList: true, subtree: true });
+  function getFetchOpts(link) {
+    const fetchOpts = {};
+    if (link.integrity) fetchOpts.integrity = link.integrity;
+    if (link.referrerPolicy) fetchOpts.referrerPolicy = link.referrerPolicy;
+    if (link.crossOrigin === "use-credentials")
+      fetchOpts.credentials = "include";
+    else if (link.crossOrigin === "anonymous") fetchOpts.credentials = "omit";
+    else fetchOpts.credentials = "same-origin";
+    return fetchOpts;
+  }
+  function processPreload(link) {
+    if (link.ep)
+      return;
+    link.ep = true;
+    const fetchOpts = getFetchOpts(link);
+    fetch(link.href, fetchOpts);
+  }
+})();
 const samples = {
-  'Abstract Algebra - Groups': String.raw`
+  "Abstract Algebra - Groups": String.raw`
 # Abstract Algebra: A Study of Groups
 
 ## Abstract
@@ -51,8 +89,7 @@ A non-empty subset $H$ of $G$ is a subgroup of $G$ if for all $a, b \in H$, $a *
 
 Groups are a cornerstone of abstract algebra. The properties and examples discussed illustrate their fundamental role in various algebraic structures. Further study could delve into group homomorphisms, isomorphisms, and the relationship between groups and other algebraic structures like rings and fields.
 `,
-
-  'Calculus - Limits and Continuity': String.raw`
+  "Calculus - Limits and Continuity": String.raw`
 # Calculus: Limits and Continuity
 
 ## Abstract
@@ -317,7 +354,201 @@ The security of RSA relies on the difficulty of factoring large composite number
 ## 5. Conclusion
 
 RSA is a powerful public-key cryptosystem widely used in secure communication. Its security is based on the intractability of the integer factorization problem, making it suitable for various cryptographic applications.
-`,
+`
 };
-
-export default samples;
+function SampleButtonsGroup({ onData }) {
+  const handleClick = (key) => {
+    onData(samples[key]);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: Object.keys(samples).map((key) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Button,
+    {
+      outline: true,
+      pill: true,
+      className: "bg-transparent focus:ring-0",
+      gradientDuoTone: "tealToLime",
+      onClick: () => handleClick(key),
+      children: key
+    },
+    key
+  )) });
+}
+function RecommendationAccordion({ onData }) {
+  const [isOpen, setIsOpen] = reactExports.useState(false);
+  const handleClick = (data) => {
+    onData(data);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Accordion, { alwaysOpen: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Accordion.Panel, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Accordion.Title,
+      {
+        className: "bg-transparent text-black hover:bg-transparent focus:ring-0",
+        onClick: () => setIsOpen(!isOpen),
+        children: "Samples"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: false,
+        animate: { height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 },
+        transition: { duration: 0.3, ease: "easeInOut" },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Accordion.Content, { className: "overflow-auto hover:resize-y", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SampleButtonsGroup, { onData: handleClick }) })
+      }
+    )
+  ] }) });
+}
+const EditorLayout = ({ onData, latex }) => {
+  const handleChange = (value) => {
+    onData(value);
+  };
+  const monaco = Le();
+  reactExports.useEffect(() => {
+    if (monaco) {
+      monaco.languages.register({ id: "latex" });
+      monaco.languages.setMonarchTokensProvider("latex", {
+        tokenizer: {
+          root: [
+            [/(\\[a-zA-Z]+)/, "keyword"],
+            [/\$[^$]*\$/, "string"],
+            [/\\$$(.*?)\\$$/, "string"],
+            [/[%].*$/, "comment"]
+          ]
+        }
+      });
+      monaco.languages.setLanguageConfiguration("latex", {
+        comments: { lineComment: "%" },
+        brackets: [["{", "}"]],
+        autoClosingPairs: [
+          { open: "{", close: "}" },
+          { open: "[", close: "]" },
+          { open: "(", close: ")" }
+        ]
+      });
+    }
+  }, [monaco]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "dark:bg-boxdark-2 dark:text-bodydark border-yellow mx-1 flex h-full rounded-lg border-2 border-solid p-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    de,
+    {
+      defaultLanguage: "latex",
+      defaultValue: latex,
+      value: latex,
+      onChange: handleChange,
+      theme: "vs-dark",
+      options: {
+        minimap: { enabled: false },
+        automaticLayout: true
+      }
+    }
+  ) }) });
+};
+const RenderLayout = ({ children }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "dark:bg-boxdark-2 dark:text-bodydark border-yellow mx-1 flex h-full grow rounded-lg border-2 border-solid", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex w-full overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("main", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto max-w-screen-2xl text-wrap p-4 md:p-6 2xl:p-10", children }) }) }) }) });
+};
+const A4_PAGE_HEIGHT_PX = 1050;
+const MARGIN_TOP_PX = 150;
+const MARGIN_BOTTOM_PX = 200;
+function App() {
+  const [latex, setLatex] = reactExports.useState(samples["Abstract Algebra - Groups"]);
+  const [htmlContent, setHtmlContent] = reactExports.useState("");
+  const [pages, setPages] = reactExports.useState([]);
+  const pageRefs = reactExports.useRef([]);
+  const hiddenContentRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const processMarkdown = async () => {
+      const processor = unified().use(remarkParse).use(remarkMath).use(remarkRehype, { allowDangerousHtml: true }).use(rehypeKatex).use(rehypeStringify, { allowDangerousHtml: true });
+      try {
+        const result = await processor.process(latex);
+        setHtmlContent(String(result));
+      } catch (error) {
+        console.error("Error processing markdown:", error);
+      }
+    };
+    processMarkdown();
+  }, [latex]);
+  reactExports.useEffect(() => {
+    if (hiddenContentRef.current && htmlContent) {
+      hiddenContentRef.current.innerHTML = htmlContent;
+      requestAnimationFrame(() => {
+        const splitHtmlIntoPages = () => {
+          const elements = Array.from(hiddenContentRef.current.children);
+          const pages2 = [];
+          let currentPageContent = [];
+          let currentPageHeight = 0;
+          elements.forEach((element) => {
+            const elementHeight = element.offsetHeight;
+            if (currentPageHeight + elementHeight < A4_PAGE_HEIGHT_PX - MARGIN_TOP_PX - MARGIN_BOTTOM_PX) {
+              currentPageContent.push(element.outerHTML);
+              currentPageHeight += elementHeight;
+            } else {
+              pages2.push(currentPageContent.join(""));
+              currentPageContent = [element.outerHTML];
+              currentPageHeight = elementHeight;
+            }
+          });
+          if (currentPageContent.length > 0) {
+            pages2.push(currentPageContent.join(""));
+          }
+          return pages2;
+        };
+        const newPages = splitHtmlIntoPages();
+        setPages(newPages);
+      });
+    }
+  }, [htmlContent]);
+  const downloadPDF = async () => {
+    const opt = {
+      margin: [MARGIN_TOP_PX / 4, 10, MARGIN_BOTTOM_PX / 4, 10],
+      filename: "document.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 1 },
+      jsPDF: { unit: "px", format: "a4", orientation: "portrait" },
+      enableLinks: true,
+      pagebreak: { mode: "avoid-all" }
+    };
+    const promises = pages.map(async (page, index) => {
+      const pageElement = pageRefs.current[index];
+      return html2pdf().set(opt).from(pageElement).save();
+    });
+    await Promise.all(promises);
+  };
+  const handleSampleData = (data) => {
+    if (data) {
+      setLatex(data);
+    }
+  };
+  const handleEditorData = (data) => {
+    setLatex(data);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex h-screen justify-center bg-gradient-to-r from-blue-400 to-blue-600 py-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col overflow-auto hover:resize-x md:w-1/3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-1 mb-1 flex-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RecommendationAccordion, { onData: handleSampleData }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-0 flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditorLayout, { onData: handleEditorData, latex }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grow", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(RenderLayout, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: hiddenContentRef, className: "absolute left-[-9999px] top-0" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-4", children: pages.map((page, pageIndex) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            ref: (el) => pageRefs.current[pageIndex] = el,
+            className: "pdf-container",
+            dangerouslySetInnerHTML: { __html: page }
+          },
+          pageIndex
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: downloadPDF,
+          className: "btn btn-red absolute bottom-9 right-4 mt-4 rounded-full px-4 py-2",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(FaRegFilePdf, { size: "2rem" })
+        }
+      )
+    ] })
+  ] });
+}
+createRoot(document.getElementById("root")).render(
+  /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
+);

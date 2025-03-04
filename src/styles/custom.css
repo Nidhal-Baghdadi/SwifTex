@@ -1,3 +1,4 @@
 body {
-  background-color: #f5f5f5;
+  @apply bg-gray-100; /* Use a light gray for the body */
+  font-family: 'Inter', sans-serif; /* Added a specific font-family */
 }

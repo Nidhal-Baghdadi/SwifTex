@@ -3,32 +3,81 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply font-sans bg-gray-100 text-gray-800; 
+  }
+
   h1 {
-    @apply text-2xl;
+    @apply text-3xl font-bold mb-4; 
   }
+
   h2 {
-    @apply text-xl;
+    @apply text-2xl font-semibold mb-2; 
   }
+
+  h3 {
+    @apply text-xl font-semibold mb-2; 
+  }
+
+  h4 {
+    @apply text-lg font-semibold mb-2;
+  }
+
+  p,
+  li {
+    @apply text-base leading-relaxed; 
+  }
+
   a {
-    @apply text-blue-500 underline underline-offset-2;
+    @apply text-blue-600 underline underline-offset-2 hover:text-blue-800; 
+  }
+
+  pre,
+  code {
+    @apply bg-gray-100 p-2 rounded-md text-sm overflow-x-auto;
+  }
+
+  ul,
+  ol {
+    @apply space-y-2; /* Space between list items */
+  }
+
+  li {
+    @apply ml-6;
   }
 }
 
 @layer components {
   .btn {
-    @apply rounded bg-blue-500 px-4 py-2 text-white;
+    @apply rounded-md px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
   }
 
   .btn-indigo {
-    @apply bg-indigo-500 text-white;
-  }
-
-  .btn-indigo:hover {
-    @apply bg-indigo-600;
+    @apply bg-indigo-600 text-white hover:bg-indigo-700;
   }
 
   .btn-blue {
-    @apply inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-0;
+    @apply inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-0;
+  }
+  .btn-red {
+    @apply bg-red-500 text-white hover:bg-red-600;
+  }
+
+  /* RecommendationAccordion */
+  .accordion-title {
+    @apply flex items-center justify-between cursor-pointer bg-gray-200 p-3 rounded-t-md hover:bg-gray-300;
+  }
+  .accordion-content {
+    @apply p-3 bg-gray-100 rounded-b-md;
+  }
+  /* Editor */
+  .editor {
+    @apply bg-white border border-gray-300 rounded-md p-4;
+  }
+
+  /* Render*/
+  .render {
+    @apply bg-white border border-gray-300 rounded-md p-4;
   }
 }
 
@@ -36,4 +85,45 @@
   .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
+}
+
+/* Custom CSS for PDF Container */
+.pdf-container {
+  @apply w-[210mm] h-[297mm] mx-auto bg-white shadow-lg box-border overflow-hidden;
+  padding: 20mm 20mm 0 20mm;
+  font-family: Arial, sans-serif;
+}
+
+.pdf-container p,
+.pdf-container li {
+  @apply text-[12pt] leading-[1.5] break-words;
+}
+
+.pdf-container pre,
+.pdf-container code {
+  @apply font-mono text-[10pt] bg-[#f0f0f0] p-[0.2em] rounded-md overflow-x-auto;
+}
+
+.pdf-container h1 {
+  @apply text-2xl mb-1;
+}
+
+.pdf-container h2 {
+  @apply text-xl mb-1;
+}
+
+.pdf-container h3 {
+  @apply text-lg mb-1;
+}
+
+.pdf-container h4 {
+  @apply text-base mb-1;
+}
+
+.pdf-container ul {
+  @apply list-disc ml-8;
+}
+
+.pdf-container ol {
+  @apply list-decimal ml-8;
 }

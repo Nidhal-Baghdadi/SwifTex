@@ -111,12 +111,18 @@ export default function App() {
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       enableLinks: true,
-      pagebreak: { mode: ['css', 'legacy'], after: '.pdf-container' },
+      pagebreak: { mode: [] },
     };
 
     try {
       await new Promise((resolve) => requestAnimationFrame(resolve));
-      await html2pdf().set(opt).from(exportElement).save();
+      const pdf = await html2pdf().set(opt).from(exportElement).toPdf().get('pdf');
+
+      while (pdf.getNumberOfPages() > pages.length) {
+        pdf.deletePage(pdf.getNumberOfPages());
+      }
+
+      pdf.save(opt.filename);
     } finally {
       exportElement.classList.remove('pdf-pages-exporting');
       isDownloadingRef.current = false;

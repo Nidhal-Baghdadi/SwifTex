@@ -452,8 +452,10 @@ function App() {
   const [latex, setLatex] = reactExports.useState(samples["Abstract Algebra - Groups"]);
   const [htmlContent, setHtmlContent] = reactExports.useState("");
   const [pages, setPages] = reactExports.useState([]);
-  const pageRefs = reactExports.useRef([]);
+  const [isDownloading, setIsDownloading] = reactExports.useState(false);
   const hiddenContentRef = reactExports.useRef(null);
+  const pagesContainerRef = reactExports.useRef(null);
+  const isDownloadingRef = reactExports.useRef(false);
   reactExports.useEffect(() => {
     const processMarkdown = async () => {
       const processor = unified().use(remarkParse).use(remarkMath).use(remarkRehype, { allowDangerousHtml: true }).use(rehypeKatex).use(rehypeStringify, { allowDangerousHtml: true });
@@ -497,20 +499,40 @@ function App() {
     }
   }, [htmlContent]);
   const downloadPDF = async () => {
+    const exportElement = pagesContainerRef.current;
+    if (!pages.length || !exportElement || isDownloadingRef.current) {
+      return;
+    }
+    isDownloadingRef.current = true;
+    setIsDownloading(true);
+    exportElement.classList.add("pdf-pages-exporting");
     const opt = {
-      margin: [MARGIN_TOP_PX / 4, 10, MARGIN_BOTTOM_PX / 4, 10],
+      margin: 0,
       filename: "document.pdf",
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 1 },
-      jsPDF: { unit: "px", format: "a4", orientation: "portrait" },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       enableLinks: true,
-      pagebreak: { mode: "avoid-all" }
+      pagebreak: { mode: [] }
     };
-    const promises = pages.map(async (page, index) => {
-      const pageElement = pageRefs.current[index];
-      return html2pdf().set(opt).from(pageElement).save();
-    });
-    await Promise.all(promises);
+    try {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const pdf = await html2pdf().set(opt).from(exportElement).toPdf().get("pdf");
+      while (pdf.getNumberOfPages() > pages.length) {
+        pdf.deletePage(pdf.getNumberOfPages());
+      }
+      pdf.save(opt.filename);
+    } finally {
+      exportElement.classList.remove("pdf-pages-exporting");
+      isDownloadingRef.current = false;
+      setIsDownloading(false);
+    }
   };
   const handleSampleData = (data) => {
     if (data) {
@@ -528,10 +550,9 @@ function App() {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grow", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(RenderLayout, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: hiddenContentRef, className: "absolute left-[-9999px] top-0" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-4", children: pages.map((page, pageIndex) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: pagesContainerRef, className: "flex flex-col gap-4", children: pages.map((page, pageIndex) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           "div",
           {
-            ref: (el) => pageRefs.current[pageIndex] = el,
             className: "pdf-container",
             dangerouslySetInnerHTML: { __html: page }
           },
@@ -542,7 +563,10 @@ function App() {
         "button",
         {
           onClick: downloadPDF,
-          className: "btn btn-red absolute bottom-9 right-4 mt-4 rounded-full px-4 py-2",
+          disabled: !pages.length || isDownloading,
+          "aria-label": "Download PDF",
+          title: isDownloading ? "Preparing PDF..." : "Download PDF",
+          className: "btn btn-red absolute bottom-9 right-4 mt-4 rounded-full px-4 py-2 disabled:cursor-not-allowed disabled:opacity-60",
           children: /* @__PURE__ */ jsxRuntimeExports.jsx(FaRegFilePdf, { size: "2rem" })
         }
       )

@@ -127,3 +127,20 @@
 .pdf-container ol {
   @apply list-decimal ml-8;
 }
+
+.pdf-pages-exporting {
+  gap: 0;
+  background: #ffffff;
+}
+
+.pdf-pages-exporting .pdf-container {
+  margin: 0 auto;
+  box-shadow: none;
+  page-break-after: always;
+  break-after: page;
+}
+
+.pdf-pages-exporting .pdf-container:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}

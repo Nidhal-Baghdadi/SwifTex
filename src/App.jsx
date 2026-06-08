@@ -25,8 +25,10 @@ export default function App() {
   const [latex, setLatex] = useState(samples['Abstract Algebra - Groups']);
   const [htmlContent, setHtmlContent] = useState('');
   const [pages, setPages] = useState([]);
-  const pageRefs = useRef([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const hiddenContentRef = useRef(null); // Ref for the hidden container
+  const pagesContainerRef = useRef(null);
+  const isDownloadingRef = useRef(false);
 
   useEffect(() => {
     const processMarkdown = async () => {
@@ -86,22 +88,40 @@ export default function App() {
   }, [htmlContent]);
 
   const downloadPDF = async () => {
+    const exportElement = pagesContainerRef.current;
+
+    if (!pages.length || !exportElement || isDownloadingRef.current) {
+      return;
+    }
+
+    isDownloadingRef.current = true;
+    setIsDownloading(true);
+    exportElement.classList.add('pdf-pages-exporting');
+
     const opt = {
-      margin: [MARGIN_TOP_PX / 4, 10, MARGIN_BOTTOM_PX / 4, 10],
+      margin: 0,
       filename: 'document.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 1 },
-      jsPDF: { unit: 'px', format: 'a4', orientation: 'portrait' },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       enableLinks: true,
-      pagebreak: { mode: 'avoid-all' },
+      pagebreak: { mode: ['css', 'legacy'], after: '.pdf-container' },
     };
 
-    const promises = pages.map(async (page, index) => {
-      const pageElement = pageRefs.current[index];
-      return html2pdf().set(opt).from(pageElement).save();
-    });
-
-    await Promise.all(promises);
+    try {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await html2pdf().set(opt).from(exportElement).save();
+    } finally {
+      exportElement.classList.remove('pdf-pages-exporting');
+      isDownloadingRef.current = false;
+      setIsDownloading(false);
+    }
   };
 
   const handleSampleData = (data) => {
@@ -128,11 +148,10 @@ export default function App() {
       <div className='grow'>
         <RenderLayout>
           <div ref={hiddenContentRef} className='absolute left-[-9999px] top-0' />
-          <div className='flex flex-col gap-4'>
+          <div ref={pagesContainerRef} className='flex flex-col gap-4'>
             {pages.map((page, pageIndex) => (
               <div
                 key={pageIndex}
-                ref={(el) => (pageRefs.current[pageIndex] = el)}
                 className='pdf-container'
                 dangerouslySetInnerHTML={{ __html: page }}
               />
@@ -141,7 +160,10 @@ export default function App() {
         </RenderLayout>
         <button
           onClick={downloadPDF}
-          className='btn btn-red absolute bottom-9 right-4 mt-4 rounded-full px-4 py-2'
+          disabled={!pages.length || isDownloading}
+          aria-label='Download PDF'
+          title={isDownloading ? 'Preparing PDF...' : 'Download PDF'}
+          className='btn btn-red absolute bottom-9 right-4 mt-4 rounded-full px-4 py-2 disabled:cursor-not-allowed disabled:opacity-60'
         >
           <FaRegFilePdf size={'2rem'} />
         </button>
